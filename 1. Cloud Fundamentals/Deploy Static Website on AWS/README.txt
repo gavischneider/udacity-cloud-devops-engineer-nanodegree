@@ -1,0 +1,1 @@
+Here is the link to my website: http://udacity-cloud-fundamentals-project-bucket.s3.us-east-2.amazonaws.com/index.html
