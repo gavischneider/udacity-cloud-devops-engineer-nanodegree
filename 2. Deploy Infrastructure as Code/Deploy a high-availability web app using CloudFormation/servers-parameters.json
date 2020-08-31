@@ -2,5 +2,13 @@
   {
     "ParameterKey": "EnvironmentName",
     "ParameterValue": "UdacityProject2"
+  },
+  {
+    "ParameterKey": "MinAutoScalingSize",
+    "ParameterValue": "2"
+  },
+  {
+    "ParameterKey": "MaxAutoScalingSize",
+    "ParameterValue": "4"
   }
 ]
