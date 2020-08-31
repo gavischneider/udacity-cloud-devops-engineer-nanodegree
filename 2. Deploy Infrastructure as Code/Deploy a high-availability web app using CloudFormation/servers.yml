@@ -1,7 +1,7 @@
 Description: CloudFormation Project - Servers
 Parameters:
   EnvironmentName:
-    Description: An Environment name that will be prefixed to resources
+    Description: An environment name that will be prefixed to the resources
     Type: String
 
 Resources:
@@ -24,7 +24,7 @@ Resources:
   WebServerSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: Allow http to our webApp Hosts and ssh only from local
+      GroupDescription: Allow HTTP to our webApp Hosts and allow SSH only from local
       VpcId:
         Fn::ImportValue: !Sub "${EnvironmentName}-VPCID"
       SecurityGroupIngress:
@@ -119,7 +119,7 @@ Resources:
           Fn::Sub: "${EnvironmentName}-VPCID"
 Outputs:
   LoadBanlancerEndpoint:
-    Description: this is the endpoint to use for accessing the loadbanlancer
+    Description: This is the endpoint to access the loadbanlancer
     Value: !Join ["", ["http://", !GetAtt WebApploadBalancer.DNSName]]
     Export:
       Name: !Sub ${EnvironmentName}-LBURL
