@@ -1,7 +1,13 @@
 Description: CloudFormation Project - Servers
 Parameters:
   EnvironmentName:
-    Description: An environment name that will be prefixed to the resources
+    Description: An Environment name that will be prefixed to resources
+    Type: String
+  MinAutoScalingSize:
+    Description: The minimum size for the auto scaling group
+    Type: String
+  MaxAutoScalingSize:
+    Description: The maximum size for the auto scaling group
     Type: String
 
 Resources:
@@ -24,7 +30,7 @@ Resources:
   WebServerSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: Allow HTTP to our webApp Hosts and allow SSH only from local
+      GroupDescription: Allow http to our webApp Hosts and ssh only from local
       VpcId:
         Fn::ImportValue: !Sub "${EnvironmentName}-VPCID"
       SecurityGroupIngress:
@@ -50,7 +56,7 @@ Resources:
           apt-get update
           apt-get install apache2 -y
           mv /var/www/html/index.html /var/www/html/index_old.html
-          wget -P /var/www/html https://project2udacity.s3-us-west-2.amazonaws.com/index.html
+          wget -P /var/www/html https://udacity-cloudformation-bucket.s3-us-west-2.amazonaws.com/index.html
           systemctl start apache2.service
       ImageId: ami-005bdb005fb00e791
       SecurityGroups:
@@ -65,10 +71,10 @@ Resources:
     Properties:
       VPCZoneIdentifier:
         - Fn::ImportValue: !Sub "${EnvironmentName}-PRIV-NETS"
+      MinSize: !Ref MinAutoScalingSize
+      MaxSize: !Ref MaxAutoScalingSize
       LaunchConfigurationName:
         Ref: WebAppLaunchConfig
-      MinSize: "4"
-      MaxSize: "4"
       TargetGroupARNs:
         - Ref: WebAppTargetGroup
   WebApploadBalancer:
@@ -119,7 +125,7 @@ Resources:
           Fn::Sub: "${EnvironmentName}-VPCID"
 Outputs:
   LoadBanlancerEndpoint:
-    Description: This is the endpoint to access the loadbanlancer
+    Description: this is the endpoint to use for accessing the loadbanlancer
     Value: !Join ["", ["http://", !GetAtt WebApploadBalancer.DNSName]]
     Export:
       Name: !Sub ${EnvironmentName}-LBURL
